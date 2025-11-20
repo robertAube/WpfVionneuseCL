@@ -11,9 +11,9 @@ namespace MirzaMediaPlayer.Models {
         private PlayListContainer _playListContainer;
 
         public GestionVideo(PlayListContainer playListContainer) {
-            videoInfos.Add(getVideo("question 1", @"C:\!ra\204H25- projets\finalV2\ProjetIntegrateur-Equipe1\ProjetIntegrateur_Equipe1\Library\PackageCache\com.unity.timeline@1.7.6\Samples~\Customization\Demo\Videos\M30-1317.mp4"));
-            videoInfos.Add(getVideo("question 2", @"C:\!ra\204H25- projets\finalV2\ProjetIntegrateur-Equipe1\ProjetIntegrateur_Equipe1\Library\PackageCache\com.unity.timeline@1.7.6\Samples~\Customization\Demo\Videos\M30-1356.mp4"));
-            videoInfos.Add(getVideo("formatif", @"C:\!ra\C#Wpf\MirzaMediaPlayer\!fichiers\DémoFormatif11.mkv"));
+            videoInfos.Add(getVideo("question 1", @"..\..\!fichiers\M09-1317.mp4"));
+            videoInfos.Add(getVideo("question 2", @"..\..\!fichiers\M30-1356.mp4"));
+            videoInfos.Add(getVideo("formatif", @"..\..\!fichiers\DémoFormatif11.mkv"));
             _playListContainer = playListContainer;
             ajouterVideosDansListe();
         }
@@ -29,7 +29,7 @@ namespace MirzaMediaPlayer.Models {
                 if (fi.Extension.ToLower().Contains("mp3")) {
                     newList.Icon = @"Icons\Music.ico";
                 }
-                else if (fi.Extension.ToLower().Contains("mp4") || fi.Extension.ToLower().Contains("3gp")) {
+                else if (fi.Extension.ToLower().Contains("mp4") || fi.Extension.ToLower().Contains("3gp") || fi.Extension.ToLower().Contains("mkv")) {
                     newList.Icon = @"Icons\Video.ico";
                 }
                 _playListContainer.PlayListData.Add(newList);
@@ -38,7 +38,7 @@ namespace MirzaMediaPlayer.Models {
 
         private VideoInfo getVideo(string name, string filePath) {
             VideoInfo videoInfo;
-            string defFilePath = @"C:\!ra\C#Wpf\MirzaMediaPlayer\!fichiers\M09-1317.mp4";
+            string defFilePath = @"..\..\!fichiers\M09-1317.mp4";
 
             if (File.Exists(filePath)) {
                 string[] videoExtensions = { ".mp4", ".avi", ".mkv", ".mov", ".wmv" };
@@ -48,7 +48,7 @@ namespace MirzaMediaPlayer.Models {
                     videoInfo = new VideoInfo(name, filePath);
                 }
                 else {
-                    videoInfo = new VideoInfo("LE fichier n'est pas une vidéo", defFilePath);
+                    videoInfo = new VideoInfo("Le fichier n'est pas une vidéo", defFilePath);
                 }
             }
             else {

@@ -7,7 +7,7 @@
         xmlns:models="clr-namespace:MirzaMediaPlayer.Models"
         xmlns:cmd="clr-namespace:MirzaMediaPlayer.Commands"
         mc:Ignorable="d" Icon="Icons/Audio_Cd.ico"
-        Title="Mirza Media Player" 
+        Title="Cegep Limoilou Media Player" 
         Background="#191919" Foreground="White"
         Height="450" Width="600"
         Loaded="Window_Loaded">
@@ -90,8 +90,8 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <Image Source="{Binding Icon}" Width="24" Height="24" Stretch="Uniform" Grid.RowSpan="2" Margin="0,0,2,0"/>
-                            <TextBlock Text="{Binding Name}" Grid.Column="1" Foreground="RoyalBlue" Margin="1" VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding FullName}" Grid.Column="1" Grid.Row="1" Foreground="RoyalBlue" Margin="1" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Name}" Grid.Column="1" Foreground="Wheat" Margin="1" VerticalAlignment="Center"/>
+<!--                            <TextBlock Text="{Binding FullName}" Grid.Column="1" Grid.Row="1" Foreground="RoyalBlue" Margin="1" VerticalAlignment="Center"/> -->
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -127,12 +127,14 @@
         </Border>
         <StackPanel Grid.Column="3" Grid.Row="1" Grid.RowSpan="3" Margin="0,0,0,3">
             <StackPanel>
+                <!-- 
                 <TextBlock Margin="2,1,1,1">Volume</TextBlock>
                 <Slider Name="sliderVolume" Value=".75" Maximum="1" TickPlacement="TopLeft" ValueChanged="sliderVolume_ValueChanged"/>
                 <TextBlock Margin="2,1,1,1">Balance</TextBlock>
                 <Slider Name="sliderBalance" Value="0" Minimum="-1" Maximum="1" TickPlacement="TopLeft" ValueChanged="sliderBalance_ValueChanged"/>
+                -->
                 <TextBlock Margin="2,1,1,1">Speed</TextBlock>
-                <Slider Name="sliderSpeed" Value="1" Minimum="0" Maximum="4" TickPlacement="TopLeft" IsSnapToTickEnabled="True" ValueChanged="sliderSpeed_ValueChanged"/>
+                <Slider Name="sliderSpeed" Value="4" Minimum="0" Maximum="8" TickPlacement="TopLeft" IsSnapToTickEnabled="True" ValueChanged="sliderSpeed_ValueChanged"/>
             </StackPanel>
         </StackPanel>
         <Grid Grid.Row="1">
@@ -143,7 +145,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock Name="textBlockProgress" Text="00:00:00" VerticalAlignment="Center" Foreground="Lime" Margin="2"/>
             <Slider Name="sliderDuration" LargeChange="10" IsEnabled="True" Minimum="0" Maximum="100" Grid.Column="1" Margin="3" ValueChanged="sliderDuration_ValueChanged"/>
-            <TextBlock Name="textBlockDuration" Text="00:00:00" Foreground="RoyalBlue" VerticalAlignment="Center" Grid.Column="2" Margin="2"/>
+            <TextBlock Name="textBlockDuration" Text="00:00:00" Foreground="White" VerticalAlignment="Center" Grid.Column="2" Margin="2"/>
         </Grid>
         <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="3">
   <!--          <Button Name="buttonLoad" 
