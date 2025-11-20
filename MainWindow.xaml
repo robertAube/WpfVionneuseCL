@@ -77,10 +77,13 @@
         <Border BorderBrush="RoyalBlue" BorderThickness="2" Grid.Column="2" Margin="5,0">
             <ListBox Background="#191919"  Name="listBoxPlaylist" 
                      ItemsSource="{Binding Source={StaticResource playListContainer},Path=PlayListData,UpdateSourceTrigger=PropertyChanged}"
-                     SelectionMode="Extended">
+                     SelectionMode="Extended"
+                     SelectionChanged="lbSelectionChanged"
+                     
+                     >
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid Margin="3" MouseLeftButtonDown="Grid_MouseLeftButtonDown">
+                        <Grid Margin="3"> <!-- MouseLeftButtonUp="Grid_MouseLeftButtonDown"> -->
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition/>

@@ -1,13 +1,14 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Media;
-using Microsoft.Win32;
-using System.IO;
-using System.Windows.Threading;
-using System.Threading.Tasks;
+﻿using Microsoft.Win32;
 using MirzaMediaPlayer.Models;
-using System.Windows.Media.Imaging;
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace MirzaMediaPlayer {
 
@@ -181,24 +182,36 @@ namespace MirzaMediaPlayer {
                 StopMedia();
         }
 
+
+        private void lbSelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if (listBoxPlaylist.SelectedItem != null) {
+                manage_ListBoxSelectMedia();
+
+            }
+        }
+
+        private void manage_ListBoxSelectMedia() {
+            _currentSelectedIndex = listBoxPlaylist.SelectedIndex;
+            if (_currentSelectedIndex >= 0) {
+                PlayMedia(GetNextMediaFileName());
+                BitmapImage image = null;
+                _isPaused = false;
+                try {
+                    image = new BitmapImage(_pauseUri);
+                    imagePlayPause.Source = image;
+                }
+                catch { buttonPlayPause.Content = "Pause (CTRL+P)"; }
+                buttonPlayPause.ToolTip = "Pause (CTRL+P)";
+            }
+            else {
+
+            }
+        }
+
         private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
             int clickCount = e.ClickCount;
             if (clickCount > 0) {
-                _currentSelectedIndex = listBoxPlaylist.SelectedIndex;
-                if (_currentSelectedIndex >= 0) {
-                    PlayMedia(GetNextMediaFileName());
-                    BitmapImage image = null;
-                    _isPaused = false;
-                    try {
-                        image = new BitmapImage(_pauseUri);
-                        imagePlayPause.Source = image;
-                    }
-                    catch { buttonPlayPause.Content = "Pause (CTRL+P)"; }
-                    buttonPlayPause.ToolTip = "Pause (CTRL+P)";
-                }
-                else {
-
-                }
+                manage_ListBoxSelectMedia();
             }
         }
 
