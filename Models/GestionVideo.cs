@@ -18,6 +18,8 @@ namespace MirzaMediaPlayer.Models {
             ajouterVideosDansListe();
         }
 
+
+
         private void ajouterVideosDansListe() {
             foreach (VideoInfo videoInfo in videoInfos) {
                 FileInfo fi = new FileInfo(videoInfo.VideoFullPath);

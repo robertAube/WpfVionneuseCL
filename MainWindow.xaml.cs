@@ -17,6 +17,8 @@ namespace MirzaMediaPlayer {
 
             _playListContainer = TryFindResource("playListContainer") as PlayListContainer;
             setVideoDepart();
+
+            this.Loaded += MainWindow_Loaded;
         }
 
         private void setVideoDepart() {
@@ -166,14 +168,14 @@ namespace MirzaMediaPlayer {
         }
         */
         private void sliderSpeed_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-            mediaElementMain.SpeedRatio = sliderSpeed.Value/4;
+            mediaElementMain.SpeedRatio = sliderSpeed.Value / 4;
         }
 
         private void mediaElementMain_MediaEnded(object sender, RoutedEventArgs e) {
 
             _timer.Stop();
             if (_playListContainer.PlayListData.Count > 0) {
-                PlayMedia(GetNextMediaFileName(false)); 
+                PlayMedia(GetNextMediaFileName(false));
             }
             else
                 StopMedia();
@@ -181,17 +183,22 @@ namespace MirzaMediaPlayer {
 
         private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
             int clickCount = e.ClickCount;
-            if (clickCount > 1) {
+            if (clickCount > 0) {
                 _currentSelectedIndex = listBoxPlaylist.SelectedIndex;
-                PlayMedia(GetNextMediaFileName());
-                BitmapImage image = null;
-                _isPaused = false;
-                try {
-                    image = new BitmapImage(_pauseUri);
-                    imagePlayPause.Source = image;
+                if (_currentSelectedIndex >= 0) {
+                    PlayMedia(GetNextMediaFileName());
+                    BitmapImage image = null;
+                    _isPaused = false;
+                    try {
+                        image = new BitmapImage(_pauseUri);
+                        imagePlayPause.Source = image;
+                    }
+                    catch { buttonPlayPause.Content = "Pause (CTRL+P)"; }
+                    buttonPlayPause.ToolTip = "Pause (CTRL+P)";
                 }
-                catch { buttonPlayPause.Content = "Pause (CTRL+P)"; }
-                buttonPlayPause.ToolTip = "Pause (CTRL+P)";
+                else {
+
+                }
             }
         }
 
@@ -203,6 +210,19 @@ namespace MirzaMediaPlayer {
                 }
             }
         }
+
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e) {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (_playListContainer.PlayListData.Count > 0) {
+                    PlayMedia(GetNextMediaFileName(false));
+                }
+                // Code à exécuter après affichage complet
+                //MessageBox.Show("Exécution après affichage via Dispatcher !");
+            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+        }
+
         #endregion
 
         #region Commands

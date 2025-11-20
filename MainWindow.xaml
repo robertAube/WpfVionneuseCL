@@ -91,10 +91,11 @@
                             </Grid.RowDefinitions>
                             <Image Source="{Binding Icon}" Width="24" Height="24" Stretch="Uniform" Grid.RowSpan="2" Margin="0,0,2,0"/>
                             <TextBlock Text="{Binding Name}" Grid.Column="1" Foreground="Wheat" Margin="1" VerticalAlignment="Center"/>
-<!--                            <TextBlock Text="{Binding FullName}" Grid.Column="1" Grid.Row="1" Foreground="RoyalBlue" Margin="1" VerticalAlignment="Center"/> -->
+                            <!--<TextBlock Text="{Binding FullName}" Grid.Column="1" Grid.Row="1" Foreground="RoyalBlue" Margin="1" VerticalAlignment="Center"/> -->
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
+                <!--
                 <ListBox.ContextMenu>
                     <ContextMenu Background="#191919">
                         <MenuItem Foreground="White" Command="{x:Static cmd:PlayerCoreCommands.RemoveItemsPlaylistCommand}">
@@ -123,6 +124,7 @@
                         </MenuItem>
                     </ContextMenu>
                 </ListBox.ContextMenu>
+                -->
             </ListBox>
         </Border>
         <StackPanel Grid.Column="3" Grid.Row="1" Grid.RowSpan="3" Margin="0,0,0,3">
@@ -133,7 +135,7 @@
                 <TextBlock Margin="2,1,1,1">Balance</TextBlock>
                 <Slider Name="sliderBalance" Value="0" Minimum="-1" Maximum="1" TickPlacement="TopLeft" ValueChanged="sliderBalance_ValueChanged"/>
                 -->
-                <TextBlock Margin="2,1,1,1">Speed</TextBlock>
+                <TextBlock Margin="2,1,1,1">Vitesse de lecture</TextBlock>
                 <Slider Name="sliderSpeed" Value="4" Minimum="0" Maximum="8" TickPlacement="TopLeft" IsSnapToTickEnabled="True" ValueChanged="sliderSpeed_ValueChanged"/>
             </StackPanel>
         </StackPanel>
@@ -148,7 +150,8 @@
             <TextBlock Name="textBlockDuration" Text="00:00:00" Foreground="White" VerticalAlignment="Center" Grid.Column="2" Margin="2"/>
         </Grid>
         <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="3">
-  <!--          <Button Name="buttonLoad" 
+            <!--
+            <Button Name="buttonLoad" 
                      Grid.Column="2" Command="{x:Static cmd:PlayerCoreCommands.LoadCommand}"
                     Style="{StaticResource styleButtonCommon}" ToolTip="Load Files (CTRL+O)">
                 <Image Source="Icons/Folder.png" Height="32" Width="32"/>
@@ -184,7 +187,7 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Name="textBlockMediaStatus" Grid.Row="1" Margin="3,2,2,2"
-                   Foreground="White" Text="No Media" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
+                   Foreground="White" Text="Aucun média" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
             <Ellipse Name="ellipseStatus" Grid.Column="1" Fill="Gray" Width="20" Height="20" Margin="2,2,10,2"/>
         </Grid>
     </Grid>
