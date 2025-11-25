@@ -54,19 +54,5 @@ namespace MyUtil {
 
             return significativeLinesFromTextFile;
         }
-
-        public static List<string> readValideDirectoryFromTextFile(string filePath) {
-            List<string> significativeLinesFromTextFile = readSignificativeLinesFromTextFile(filePath);
-            List<string> stringsTrimmedAndClean = new List<string>();
-
-            //  var replacedNames = logList.Select(x => x.Trim());
-            foreach (string line in significativeLinesFromTextFile) {
-                if (Directory.Exists(line)) {
-                    stringsTrimmedAndClean.Add(line);
-                }
-            }
-            return stringsTrimmedAndClean;
-        }
-
     }
 }

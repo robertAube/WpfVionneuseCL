@@ -11,14 +11,17 @@ namespace MirzaMediaPlayer.Models {
         private PlayListContainer _playListContainer;
 
         public GestionVideo(PlayListContainer playListContainer) {
-            videoInfos.Add(getVideo("question 1", @"..\..\!fichiers\M09-1317.mp4"));
-            videoInfos.Add(getVideo("question 2", @"..\..\!fichiers\M30-1356.mp4"));
-            videoInfos.Add(getVideo("formatif", @"..\..\!fichiers\DémoFormatif11.mkv"));
+            chargerMedia();
             _playListContainer = playListContainer;
             ajouterVideosDansListe();
         }
 
+        private void chargerMedia() {
+            videoInfos.Add(getVideo("question 1", @"..\..\!fichiers\butiner.mp4"));
+            videoInfos.Add(getVideo("question 2", @"..\..\!fichiers\M30-1356.mp4"));
+            videoInfos.Add(getVideo("formatif", @"..\..\!fichiers\DémoFormatif11.mkv"));
 
+        }
 
         private void ajouterVideosDansListe() {
             foreach (VideoInfo videoInfo in videoInfos) {
