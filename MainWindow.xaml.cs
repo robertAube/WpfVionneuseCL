@@ -13,8 +13,10 @@ using System.Windows.Threading;
 namespace MirzaMediaPlayer {
 
     public partial class MainWindow : Window {
+        internal static AppConfig AppConfig { get; private set; }
         public MainWindow() {
             InitializeComponent();
+            AppConfig = new AppConfig();
 
             _playListContainer = TryFindResource("playListContainer") as PlayListContainer;
             setVideoDepart();

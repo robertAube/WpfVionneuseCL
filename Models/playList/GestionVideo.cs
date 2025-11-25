@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MirzaMediaPlayer.MyUtil;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,9 +18,26 @@ namespace MirzaMediaPlayer.Models {
         }
 
         private void chargerMedia() {
-            videoInfos.Add(getVideo("question 1", @"..\..\!fichiers\butiner.mp4"));
-            videoInfos.Add(getVideo("question 2", @"..\..\!fichiers\M30-1356.mp4"));
-            videoInfos.Add(getVideo("formatif", @"..\..\!fichiers\DémoFormatif11.mkv"));
+            List<string> listePath = new List<string>();
+            List<string> listeNom = new List<string>();
+
+            try {
+                listeNom = FichierExcel.lireColonneExcel(MainWindow.AppConfig.mediaListPath, 1, 1);
+                listePath = FichierExcel.lireColonneExcel(MainWindow.AppConfig.mediaListPath, 1, 2);
+            }
+            catch (Exception ex) {
+                videoInfos.Add(getVideo("erreur fichier excel", MainWindow.AppConfig.defaultVideoFullPath));
+            }
+            int i = 0;
+            foreach (string nom in listeNom) {
+                videoInfos.Add(getVideo(nom, listePath[i++]));
+            }
+
+            //    videoInfos.Add(getVideo("question 1", @"..\..\!fichiers\butiner.mp4"));
+            //videoInfos.Add(getVideo("question 2", @"..\..\!fichiers\M30-1356.mp4"));
+            //videoInfos.Add(getVideo("formatif", @"..\..\!fichiers\DémoFormatif11.mkv"));
+
+
 
         }
 
@@ -43,7 +61,7 @@ namespace MirzaMediaPlayer.Models {
 
         private VideoInfo getVideo(string name, string filePath) {
             VideoInfo videoInfo;
-            string defFilePath = @"..\..\!fichiers\M09-1317.mp4";
+            string defFilePath = MainWindow.AppConfig.defaultVideoFullPath;
 
             if (File.Exists(filePath)) {
                 string[] videoExtensions = { ".mp4", ".avi", ".mkv", ".mov", ".wmv" };
