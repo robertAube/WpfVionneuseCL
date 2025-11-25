@@ -1,58 +1,58 @@
 ﻿using System.ComponentModel;
-namespace MirzaMediaPlayer.Models
-{
-    public class PlayList:INotifyPropertyChanged
-    {
+using System.IO;
+namespace MirzaMediaPlayer.Models {
+    public class PlayList : INotifyPropertyChanged {
         private string _icon, _name, _fullName;
+
         public PlayList() { }
-        public PlayList(string icon, string name, string fullname)
-        {
+        public PlayList(string icon, string name, string fullname) {
             this._icon = icon;
             this._name = name;
             this._fullName = fullname;
-            this._fullName = "";
+            //            this._fullName = "";
         }
-        public string Icon
-        {
+        public string Icon {
             get { return _icon; }
-            set
-            {
-                if(_icon!=value)
-                {
+            set {
+                if (_icon != value) {
                     _icon = value;
                     OnPropertyChanged(nameof(Icon));
                 }
             }
         }
-        public string Name
-        {
+        public string Name {
             get { return _name; }
-            set
-            {
-                if(_name!=value)
-                {
+            set {
+                if (_name != value) {
                     _name = value;
                     OnPropertyChanged(nameof(Name));
                 }
             }
         }
-        public string FullName
-        {
+        public string FullName {
             get { return _fullName; }
-            set
-            {
-                if(_fullName!=value)
-                {
-                    _fullName = value;
+            set {
+                if (_fullName != value) {
+                    _fullName = setFichierLocal(value);
                     OnPropertyChanged(nameof(FullName));
                 }
             }
         }
+
+        private string setFichierLocal(string path) {
+            string randomName = Path.GetRandomFileName();
+            string destinationFullPath;
+            //Path.GetTempPath() donne le dossier temporaire du système (ex. C:\Users\Nom\AppData\Local\Temp)
+
+            destinationFullPath = Path.Combine(Path.GetTempPath(), randomName + Path.GetExtension(path));
+            byte[] mediaData = File.ReadAllBytes(path); // Exemple
+            File.WriteAllBytes(destinationFullPath, mediaData);
+
+            return destinationFullPath;
+        }
         public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
-        {
-            if(PropertyChanged!=null)
-            {
+        protected void OnPropertyChanged(string propertyName) {
+            if (PropertyChanged != null) {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }

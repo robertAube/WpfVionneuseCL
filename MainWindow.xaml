@@ -103,7 +103,8 @@
                             </Grid.RowDefinitions>
                             <Image Source="{Binding Icon}" Width="24" Height="24" Stretch="Uniform" Grid.RowSpan="2" Margin="0,0,2,0"/>
                             <TextBlock Text="{Binding Name}" Grid.Column="1" Foreground="Wheat" Margin="1" VerticalAlignment="Center"/>
-                            <!--<TextBlock Text="{Binding FullName}" Grid.Column="1" Grid.Row="1" Foreground="RoyalBlue" Margin="1" VerticalAlignment="Center"/> -->
+                            <!-- path du fichier media (C:\Users\robert.aube\AppData\Local\Temp) -->
+                            <!-- <TextBlock Text="{Binding FullName}" Grid.Column="1" Grid.Row="1" Foreground="Wheat" Margin="1" VerticalAlignment="Center"/> -->
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

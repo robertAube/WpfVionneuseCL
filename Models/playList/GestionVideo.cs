@@ -22,8 +22,8 @@ namespace MirzaMediaPlayer.Models {
             List<string> listeNom = new List<string>();
 
             try {
-                listeNom = FichierExcel.lireColonneExcel(MainWindow.AppConfig.mediaListPath, 1, 1);
-                listePath = FichierExcel.lireColonneExcel(MainWindow.AppConfig.mediaListPath, 1, 2);
+                listeNom = FichierExcel.lireColonneExcel(MainWindow.AppConfig.excelMediaListPath, 1, 1);
+                listePath = FichierExcel.lireColonneExcel(MainWindow.AppConfig.excelMediaListPath, 1, 2);
             }
             catch (Exception ex) {
                 videoInfos.Add(getVideo("erreur fichier excel", MainWindow.AppConfig.defaultVideoFullPath));

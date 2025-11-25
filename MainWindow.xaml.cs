@@ -2,6 +2,7 @@
 using MirzaMediaPlayer.Models;
 using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,11 +23,24 @@ namespace MirzaMediaPlayer {
             setVideoDepart();
 
             this.Loaded += MainWindow_Loaded;
+            this.Closing += MainWindow_Closing;
 
             sliderDuration.AddHandler(MouseLeftButtonDownEvent,
                     new MouseButtonEventHandler(Slider_MouseLeftButtonDown), true);
         }
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+            // fermer les fichier temporaire local
 
+            PlayList playList;
+            string filePath;
+            playList = GetNextMediaFileName(true);
+            filePath = playList.FullName;
+            while (File.Exists(filePath)) {
+                File.Delete(filePath);
+                playList = GetNextMediaFileName(true);
+                filePath = playList.FullName;
+            }
+        }
         private void setVideoDepart() {
             GestionVideo gv = new GestionVideo(_playListContainer);
         }
@@ -519,6 +533,11 @@ namespace MirzaMediaPlayer {
             }
         }
         #endregion
+
+
+
+
+
     }
 
     static class MediaElementExtensions {
