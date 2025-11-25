@@ -20,6 +20,9 @@ namespace MirzaMediaPlayer {
             setVideoDepart();
 
             this.Loaded += MainWindow_Loaded;
+
+            sliderDuration.AddHandler(MouseLeftButtonDownEvent,
+                    new MouseButtonEventHandler(Slider_MouseLeftButtonDown), true);
         }
 
         private void setVideoDepart() {
@@ -28,21 +31,48 @@ namespace MirzaMediaPlayer {
 
         #region private properties
         private TimeSpan _totalTimer, _progressTimer;
+        private bool _isDragging = false;  // pour ne pas écraser le drag par le timer
+
         private DispatcherTimer _timer;
         private PlayListContainer _playListContainer;
         private Uri _playUri = new Uri(@"Icons\Play.png", UriKind.Relative);
         private Uri _pauseUri = new Uri(@"Icons\Pause.png", UriKind.Relative);
         private int _currentSelectedIndex = 0;
         private bool _isPaused = false;
+        private bool _mediaCanSeek = false;
         private string _currentlyPlayedFileName = "";
+
+        //variables de gestion du slider
+        private bool _mouseOneSlider = false;
+        private int slowInt = 0;
+        private static readonly int SLOW_INT_MAX = 10;
+        private static readonly int TIMER_INTERVAL = 50;
         #endregion
 
         #region private methods
         private void _timer_Tick(object sender, EventArgs e) {
-            _progressTimer = mediaElementMain.Position;
-            if (_progressTimer.TotalSeconds <= _totalTimer.TotalSeconds) {
-                sliderDuration.Value = _progressTimer.TotalSeconds;
-                textBlockProgress.Text = string.Format("{0:hh\\:mm\\:ss}", _progressTimer);
+            //_progressTimer = mediaElementMain.Position;
+            //if (_progressTimer.TotalSeconds <= _totalTimer.TotalSeconds) {
+            //    sliderDuration.Value = _progressTimer.TotalSeconds;
+            //    textBlockProgress.Text = string.Format("{0:hh\\:mm\\:ss}", _progressTimer);
+            //}
+
+            // Met à jour la barre seulement si on n’est pas en train de la déplacer
+            var pos = mediaElementMain.Position;
+            textBlockProgress.Text = FormatTime(pos);
+            //            if (!_isDragging && !_mouseOneSlider && mediaElementMain.NaturalDuration.HasTimeSpan) {
+            if (mediaElementMain.NaturalDuration.HasTimeSpan) {
+                if (_mouseOneSlider) {
+                    slowInt++;
+                    if (slowInt > SLOW_INT_MAX) {
+                        sliderDuration.Value = pos.TotalMilliseconds;
+                        slowInt = 0;
+                    }
+                }
+                else if (!_isDragging) {
+                    sliderDuration.Value = pos.TotalMilliseconds;
+                    slowInt = 0;
+                }
             }
         }
         private Task<bool> DetectTimespan() {
@@ -70,7 +100,8 @@ namespace MirzaMediaPlayer {
                     _timer.Start();
 
                     _totalTimer = mediaElementMain.NaturalDuration.TimeSpan;
-                    sliderDuration.Maximum = _totalTimer.TotalSeconds;
+                    _mediaCanSeek = mediaElementMain.CanSeek();
+                    sliderDuration.Maximum = _totalTimer.TotalMilliseconds;
                     if (!mediaElementMain.HasVideo) {
                         imageAudio.Visibility = Visibility.Visible;
                     }
@@ -88,6 +119,22 @@ namespace MirzaMediaPlayer {
                 MessageBox.Show($"Error: {ex.Message}");
             }
         }
+
+
+
+        //private void Player_MediaOpened(object sender, RoutedEventArgs e) {
+        //    if (Player.NaturalDuration.HasTimeSpan) {
+        //        SeekBar.Maximum = Player.NaturalDuration.TimeSpan.TotalMilliseconds;
+        //        SeekBar.IsEnabled = true;
+        //        _timer.Start();
+        //    }
+        //    else {
+        //        SeekBar.IsEnabled = false; // flux non seekable
+        //    }
+        //}
+
+
+
         private void PauseMedia() {
             if (mediaElementMain.CanPause) {
                 try {
@@ -136,6 +183,7 @@ namespace MirzaMediaPlayer {
                     _currentSelectedIndex = 0;
             }
             fileName = _playListContainer.PlayListData[_currentSelectedIndex];
+            listBoxPlaylist.SelectedItem = _currentSelectedIndex;
             return fileName;
         }
         private PlayList GetPrevMediaFileName() {
@@ -145,20 +193,26 @@ namespace MirzaMediaPlayer {
             else
                 _currentSelectedIndex = _playListContainer.PlayListData.Count - 1;
             fileName = _playListContainer.PlayListData[_currentSelectedIndex];
+            listBoxPlaylist.SelectedItem = _currentSelectedIndex;
             return fileName;
         }
         #endregion
 
         #region main events
         private void Window_Loaded(object sender, RoutedEventArgs e) {
+            initTimerInterval(TIMER_INTERVAL);
+        }
 
+
+        private void initTimerInterval(int nbMilliseconde) {
             _timer = new DispatcherTimer(DispatcherPriority.Background)
             {
-                Interval = TimeSpan.FromSeconds(1)
+                Interval = TimeSpan.FromMilliseconds(nbMilliseconde) // Timer UI: met à jour le slider ~30 fois par seconde
             };
 
             _timer.Tick += _timer_Tick;
         }
+
         /*
         private void sliderVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             mediaElementMain.Volume = sliderVolume.Value;
@@ -215,14 +269,14 @@ namespace MirzaMediaPlayer {
             }
         }
 
-        private void sliderDuration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-            if (mediaElementMain.Source != null) {
-                if (mediaElementMain.NaturalDuration.HasTimeSpan) {
-                    _progressTimer = TimeSpan.FromSeconds(sliderDuration.Value);
-                    mediaElementMain.Position = _progressTimer;
-                }
-            }
-        }
+        //private void sliderDuration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+        //    if (mediaElementMain.Source != null) {
+        //        if (mediaElementMain.NaturalDuration.HasTimeSpan) {
+        //            _progressTimer = TimeSpan.FromSeconds(sliderDuration.Value);
+        //            mediaElementMain.Position = _progressTimer;
+        //        }
+        //    }
+        //}
 
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e) {
@@ -237,6 +291,54 @@ namespace MirzaMediaPlayer {
         }
 
         #endregion
+        #region seekBar
+
+        private void Slider_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+            _isDragging = true;
+        }
+
+
+
+        private void Slider_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+            _isDragging = true;
+        }
+
+        private void Slider_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
+
+            // Appliquer le seek à la position voulue
+            if (mediaElementMain.NaturalDuration.HasTimeSpan && _mediaCanSeek) {
+                var target = TimeSpan.FromMilliseconds(sliderDuration.Value);
+                _isDragging = false;
+                mediaElementMain.Position = target;
+                textBlockProgress.Text = FormatTime(target);
+            }
+            _isDragging = false;
+        }
+
+        //private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+        //    // Pendant le drag, permettre le "scrubbing" visuel fluide si ScrubbingEnabled, sinon on set à la fin
+        //    if (_isDragging && mediaElementMain.NaturalDuration.HasTimeSpan) {
+        //        // Optionnel: scrubbing en temps réel (peut être coûteux pour certains formats)
+        //        //mediaElementMain.Position = TimeSpan.FromMilliseconds(e.NewValue);
+        //        textBlockProgress.Text = FormatTime(TimeSpan.FromMilliseconds(e.NewValue));
+        //    }
+        //}
+
+        private void Slider_MouseEnter(object sender, MouseEventArgs e) {
+            _mouseOneSlider = true;
+        }
+
+        private void Slider_MouseLeave(object sender, MouseEventArgs e) {
+            _mouseOneSlider = false;
+        }
+
+
+        private static string FormatTime(TimeSpan ts) {
+            return ts.ToString(ts.TotalHours >= 1 ? @"hh\:mm\:ss" : @"mm\:ss");
+        }
+
+        #endregion
+
 
         #region Commands
         private void cmdLoad_CanExecute(object sender, CanExecuteRoutedEventArgs e) {
@@ -416,4 +518,12 @@ namespace MirzaMediaPlayer {
         }
         #endregion
     }
+
+    static class MediaElementExtensions {
+        public static bool CanSeek(this System.Windows.Controls.MediaElement me) {
+            // Heuristique: seek possible si durée connue ET non stream (WPF n’expose pas explicitement IsSeekable)
+            return me.NaturalDuration.HasTimeSpan;
+        }
+    }
+
 }

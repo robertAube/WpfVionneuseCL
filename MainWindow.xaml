@@ -54,10 +54,10 @@
     </Window.CommandBindings>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2.5*"/>
+            <ColumnDefinition Width="5*"/>
 
             <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="1.3*"/>
+            <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -66,7 +66,15 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid  Margin="2">
-            <MediaElement Name="mediaElementMain" Margin="2" LoadedBehavior="Manual" MediaEnded="mediaElementMain_MediaEnded"/>
+            <MediaElement 
+                Name="mediaElementMain" 
+                Margin="2" 
+                LoadedBehavior="Manual" 
+                MediaEnded="mediaElementMain_MediaEnded"
+                ScrubbingEnabled="True"
+                />
+            <!-- MediaOpened="Player_MediaOpened" -->
+
             <Image Name="imageAudio" Height="128" Width="128" Visibility="Hidden">
                 <Image.Source>
                     <BitmapImage UriSource="Icons/playIcon.png"/>
@@ -83,7 +91,8 @@
                      >
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid Margin="3"> <!-- MouseLeftButtonUp="Grid_MouseLeftButtonDown"> -->
+                        <Grid Margin="3">
+                            <!-- MouseLeftButtonUp="Grid_MouseLeftButtonDown"> -->
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition/>
@@ -131,15 +140,17 @@
             </ListBox>
         </Border>
         <StackPanel Grid.Column="3" Grid.Row="1" Grid.RowSpan="3" Margin="0,0,0,3">
-            <StackPanel>
+            <StackPanel Height="52">
                 <!-- 
                 <TextBlock Margin="2,1,1,1">Volume</TextBlock>
                 <Slider Name="sliderVolume" Value=".75" Maximum="1" TickPlacement="TopLeft" ValueChanged="sliderVolume_ValueChanged"/>
                 <TextBlock Margin="2,1,1,1">Balance</TextBlock>
                 <Slider Name="sliderBalance" Value="0" Minimum="-1" Maximum="1" TickPlacement="TopLeft" ValueChanged="sliderBalance_ValueChanged"/>
                 -->
+                <!-- Vitesse de lecture -->
                 <TextBlock Margin="2,1,1,1">Vitesse de lecture</TextBlock>
                 <Slider Name="sliderSpeed" Value="4" Minimum="0" Maximum="8" TickPlacement="TopLeft" IsSnapToTickEnabled="True" ValueChanged="sliderSpeed_ValueChanged"/>
+
             </StackPanel>
         </StackPanel>
         <Grid Grid.Row="1">
@@ -148,8 +159,28 @@
                 <ColumnDefinition/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Name="textBlockProgress" Text="00:00:00" VerticalAlignment="Center" Foreground="Lime" Margin="2"/>
+            <TextBlock Name="textBlockProgress" Text="00:00:00" VerticalAlignment="Bottom" Foreground="Lime" Margin="2,0,2,5"/>
+            <!--
             <Slider Name="sliderDuration" LargeChange="10" IsEnabled="True" Minimum="0" Maximum="100" Grid.Column="1" Margin="3" ValueChanged="sliderDuration_ValueChanged"/>
+            -->
+
+            <!-- Barre de lecture du média -->
+            <Slider x:Name="sliderDuration"
+                Grid.Row="2"
+                Margin="0 8 0 0"
+                    Grid.Column="1"
+                Minimum="0"
+                Maximum="1"  
+                IsMoveToPointEnabled="True"
+                MouseLeftButtonDown="Slider_MouseLeftButtonDown"
+                PreviewMouseLeftButtonDown="Slider_PreviewMouseLeftButtonDown"
+                PreviewMouseLeftButtonUp="Slider_PreviewMouseLeftButtonUp"
+                AutoToolTipPlacement="TopLeft"
+                AutoToolTipPrecision="0"
+                MouseEnter="Slider_MouseEnter"
+                MouseLeave="Slider_MouseLeave"
+            />
+            
             <TextBlock Name="textBlockDuration" Text="00:00:00" Foreground="White" VerticalAlignment="Center" Grid.Column="2" Margin="2"/>
         </Grid>
         <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="3">
